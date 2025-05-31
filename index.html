@@ -49,13 +49,13 @@ Thank you so much for believing in me and supporting this journey. Let’s build
 
 Donate now and be a part of my story!</p>
   </header>
+  
   <div class="max-w-3xl mx-auto">
     <!-- Donation Progress Circle -->
     <div class="circle-container mx-auto my-6">
       <canvas id="donationChart"></canvas>
-      <div class="circle-center">
-        <div id="donatedAmountText">₦0</div>
-        <div id="donationTarget">Target: ₦60,000</div>
+      <div class="circle-center" id="donationTarget">
+        ₦700,000
       </div>
     </div>
 
@@ -116,17 +116,15 @@ Donate now and be a part of my story!</p>
   </div>
 
   <script>
-    let targetAmount = 60000;
-    let donatedAmount = parseInt(localStorage.getItem('donatedAmount')) || 0;
-    const donationHistoryList = JSON.parse(localStorage.getItem('donationHistoryList')) || [];
-
+    let targetAmount = 700000;
+    let donatedAmount = 0;
     const ctx = document.getElementById('donationChart').getContext('2d');
     const donationChart = new Chart(ctx, {
       type: 'doughnut',
       data: {
         datasets: [{
           data: [donatedAmount, targetAmount - donatedAmount],
-          backgroundColor: ['#10B981', '#D1D5DB'],
+          backgroundColor: ['#10B981', '#4B5563'],
         }],
         labels: ['Donated', 'Remaining'],
       },
@@ -137,7 +135,6 @@ Donate now and be a part of my story!</p>
         },
       },
     });
-
     function updateChart(amount) {
       donatedAmount += amount;
       localStorage.setItem('donatedAmount', donatedAmount);
@@ -147,22 +144,11 @@ Donate now and be a part of my story!</p>
       document.getElementById('donatedAmountText').textContent = `₦${donatedAmount.toLocaleString()}`;
     }
 
-    function addToHistory(email, amount, date) {
-      const history = document.getElementById('donationHistory');
-      let li = document.createElement('li');
-      li.textContent = `${email} donated ₦${amount.toLocaleString()} at ${date}`;
-      history.prepend(li);
-      donationHistoryList.unshift({ email, amount, date });
-      localStorage.setItem('donationHistoryList', JSON.stringify(donationHistoryList));
-    }
-
-    function loadDonationHistory() {
-      donationHistoryList.forEach(entry => {
-        const history = document.getElementById('donationHistory');
-        let li = document.createElement('li');
-        li.textContent = `${entry.email} donated ₦${entry.amount.toLocaleString()} at ${entry.date}`;
-        history.appendChild(li);
-      });
+    function updateChart(amount) {
+      donatedAmount += amount;
+      donationChart.data.datasets[0].data = [donatedAmount, Math.max(targetAmount - donatedAmount, 0)];
+      donationChart.update();
+      document.getElementById('donationTarget').textContent = `₦${targetAmount.toLocaleString()}`;
     }
 
     function payWithPaystack() {
@@ -179,8 +165,11 @@ Donate now and be a part of my story!</p>
         currency: 'NGN',
         callback: function(response) {
           let now = new Date().toLocaleString();
+          const history = document.getElementById('donationHistory');
+          let li = document.createElement('li');
+          li.textContent = `${email} donated ₦${amount.toLocaleString()} at ${now}`;
+          history.prepend(li);
           updateChart(amount);
-          addToHistory(email, amount, now);
         },
         onClose: function() {
           alert('Donation window closed');
@@ -188,7 +177,6 @@ Donate now and be a part of my story!</p>
       });
       handler.openIframe();
     }
-
     // Load data on page load
     window.onload = function() {
       updateChart(0);
