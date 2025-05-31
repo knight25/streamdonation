@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Donation Page</title>
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .circle-container {
+      position: relative;
+      width: 200px;
+      height: 200px;
+    }
+    .circle-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #fff;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white p-4">
+  <header class="bg-gray-800 p-4 rounded shadow text-center mb-6">
+    <h1 class="text-2xl font-bold">Help Me Kickstart My Streaming Dream! 🎮🎥</h1></br>
+    <p class="text-sm text-gray-300">Hi there!, My name is Opeyemi Tolulope. I'm a passionate aspiring streamer from Nigeria with a big dream—to become one of the top streamers in the country! I've always had a love for gaming, content creation, and connecting with people through live streams.
+
+This isn’t just a hobby for me—it’s something I truly believe I can turn into a successful career with the right support. I’m currently working hard towards setting up my streaming channel, but I need your help to make it happen.
+
+Your donations will go directly into getting the essential items I need to start streaming, such as:
+
+A good streaming laptop/PC
+
+Camera and microphone
+
+Lighting and basic setup
+
+Internet data subscription
+
+and Other small accessories
+
+</br> Every contribution, no matter how small, brings me one step closer to bringing this dream to life. I’ll also keep you updated every step of the way!
+
+Thank you so much for believing in me and supporting this journey. Let’s build something amazing together </br> 💙
+
+Donate now and be a part of my story!</p>
+  </header>
+  
+  <div class="max-w-3xl mx-auto">
+    <!-- Donation Progress Circle -->
+    <div class="circle-container mx-auto my-6">
+      <canvas id="donationChart"></canvas>
+      <div class="circle-center" id="donationTarget">
+        ₦700,000
+      </div>
+    </div>
+
+    <!-- Donation Form -->
+    <div class="bg-gray-800 p-4 rounded shadow">
+      <h2 class="text-lg font-semibold mb-2">Make a Donation</h2>
+      <input type="email" id="email" placeholder="Enter your email" class="border p-2 w-full mb-2 text-black">
+      <input type="number" id="amount" placeholder="Enter amount in Naira" class="border p-2 w-full mb-2 text-black">
+      <button onclick="payWithPaystack()" class="bg-green-500 text-white px-4 py-2 rounded">Donate</button>
+    </div>
+
+    <!-- Donation History -->
+    <div class="bg-gray-800 p-4 mt-4 rounded shadow">
+      <h2 class="text-lg font-semibold mb-2">Donation History</h2>
+      <ul id="donationHistory" class="text-sm text-gray-300"></ul>
+    </div>
+
+    <!-- Items to Purchase -->
+    <div class="bg-gray-800 p-4 mt-4 rounded shadow">
+      <h2 class="text-lg font-semibold mb-2">Items to Purchase</h2>
+      <div class="grid grid-cols-2 gap-4" id="itemsList">
+        <div class="text-center">
+          <img src="./images/redmi.jpg" class="w-full rounded">
+          <p class="mt-1 text-white">Readmi Pad SE</p>
+          <p class="mt-1 text-white"> ₦250,000</p>
+        </div>
+        <div class="text-center">
+          <img src="./images/qusa.jpg" class="w-full rounded">
+          <p class="mt-1 text-white">Inverter</p>
+          <p class="mt-1 text-white"> ₦260,000</p>
+        </div>
+      </div></br>
+      <div class="grid grid-cols-2 gap-4" id="itemsList">
+        <div class="text-center">
+          <img src="./images/webcam.jpg" class="w-full rounded">
+          <p class="mt-1 text-white">Logitech webcam</p>
+          <p class="mt-1 text-white"> ₦25,000</p>
+        </div>
+        <div class="text-center">
+          <img src="./images/light.jpg" class="w-full rounded">
+          <p class="mt-1 text-white">Streaming light</p>
+          <p class="mt-1 text-white"> ₦30,000</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Social Media Section -->
+    <div class="bg-gray-800 p-4 mt-6 rounded shadow">
+      <h2 class="text-lg font-semibold mb-2">Follow to Support</h2>
+      <div class="flex space-x-4">
+        <h1> YOUTUBE :</h1><a href="https://www.youtube.com/@ToluStreamsItAll" class="text-pink-400 hover:underline">@ToluStreamsItAll</a></br>
+      </div>
+      <div class="flex space-x-4">
+        <h1> TWITTER / X :</h1><a href="https://x.com/OpeyemiTolu25" class="text-pink-400 hover:underline">@OpeyemiTolu25</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let targetAmount = 700000;
+    let donatedAmount = 0;
+    const ctx = document.getElementById('donationChart').getContext('2d');
+    const donationChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: [donatedAmount, targetAmount - donatedAmount],
+          backgroundColor: ['#10B981', '#4B5563'],
+        }],
+        labels: ['Donated', 'Remaining'],
+      },
+      options: {
+        cutout: '75%',
+        plugins: {
+          legend: { display: false },
+        },
+      },
+    });
+
+    function updateChart(amount) {
+      donatedAmount += amount;
+      donationChart.data.datasets[0].data = [donatedAmount, Math.max(targetAmount - donatedAmount, 0)];
+      donationChart.update();
+      document.getElementById('donationTarget').textContent = `₦${targetAmount.toLocaleString()}`;
+    }
+
+    function payWithPaystack() {
+      let amount = parseInt(document.getElementById('amount').value);
+      let email = document.getElementById('email').value;
+      if (!amount || amount <= 0 || !email) {
+        alert('Please enter a valid email and amount');
+        return;
+      }
+      let handler = PaystackPop.setup({
+        key: 'pk_test_8bfa7b411eb287a07baed7a5c31cccdd4886a578',
+        email: email,
+        amount: amount * 100,
+        currency: 'NGN',
+        callback: function(response) {
+          let now = new Date().toLocaleString();
+          const history = document.getElementById('donationHistory');
+          let li = document.createElement('li');
+          li.textContent = `${email} donated ₦${amount.toLocaleString()} at ${now}`;
+          history.prepend(li);
+          updateChart(amount);
+        },
+        onClose: function() {
+          alert('Donation window closed');
+        },
+      });
+      handler.openIframe();
+    }
+  </script>
+</body>
+</html>
