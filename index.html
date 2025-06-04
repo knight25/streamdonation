@@ -119,6 +119,59 @@
     }
   });
 
+    async function submitForm(event) {
+      event.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const amount = parseInt(document.getElementById('amount').value);
+
+      const handler = PaystackPop.setup({
+        key: 'pk_test_8bfa7b411eb287a07baed7a5c31cccdd4886a578',
+        email: email,
+        amount: amount * 100,
+        currency: 'NGN',
+        callback: function (response) {
+          const donationData = {
+            Email: email,
+            Amount: amount,
+            TransactionID: response.reference,
+            PaymentStatus: 'success'
+          };
+
+          addToDonationHistory(donationData);
+          updateChart(amount);
+          sendToGoogleForms(donationData);
+          alert("Thank you for your donation! 🎉");
+        },
+        onClose: function () {
+          alert('Transaction was not completed.');
+        }
+      });
+
+      handler.openIframe();
+    }
+
+    function addToDonationHistory(data) {
+      const li = document.createElement('li');
+      li.textContent = `${data.Email} donated ₦${data.Amount} - Ref: ${data.TransactionID}`;
+      document.getElementById('donationHistory').appendChild(li);
+    }
+
+    async function sendToGoogleForms(data) {
+      const formURL = 'https://docs.google.com/forms/d/e/1FAIpQLSc7f1bWZqokWL-5bfFTZpoU-ZpXnCH2-1tfs_V6DiKpt3YI0Q/formResponse';
+
+      const formData = new FormData();
+      formData.append('entry.299858209', data.Email); // Replace with real entry IDs
+      formData.append('entry.1350516490', data.Amount);
+      formData.append('entry.1122334455', data.TransactionID);
+
+      await fetch(formURL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: formData
+      });
+    }
+
   async function fetchDonations() {
     try {
       const res = await fetch(sheetURL);
