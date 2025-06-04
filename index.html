@@ -166,7 +166,7 @@
     fetchDonations();
     setInterval(fetchDonations, 30000);
 
-    // Fetch donations and update chart and history
+  // Fetch donations and update chart and history
 async function fetchDonations() {
   try {
     const response = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vTGO0K0RXNJpqKt7m58eh-fBt6LsUMnKh23QKILAeU7o7ichzF0TZ5XqbtnXet3Ry3hmh3BTGDGB9ya/pub?output=csv');
@@ -177,6 +177,7 @@ async function fetchDonations() {
 
     const emailIndex = headers.findIndex(h => h.toLowerCase().includes('email'));
     const amountIndex = headers.findIndex(h => h.toLowerCase().includes('amount'));
+    const refIndex = headers.findIndex(h => h.toLowerCase().includes('ref') || h.toLowerCase().includes('transaction'));
 
     if (emailIndex === -1 || amountIndex === -1) {
       console.error('Email or Amount column not found.');
@@ -219,6 +220,7 @@ function updateChartAndHistory(donations) {
 
 // Call this once on page load or manually after donation is submitted
 fetchDonations();
+
 
   </script>
 </body>
