@@ -213,7 +213,7 @@ function updateChartAndHistory(donations) {
 
   latestDonations.forEach(entry => {
     const li = document.createElement('li');
-    li.textContent = `${entry.email} donated ₦${entry.amount.toLocaleString()} - Ref: ${entry.reference}`;
+    li.textContent = `${entry.email} donated ₦${entry.amount.toLocaleString()}`;
     historyContainer.appendChild(li);
   });
 }
