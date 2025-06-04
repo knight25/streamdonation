@@ -97,7 +97,7 @@
 
   <!-- JS Section -->
   <script>
-    async function submitForm(event) {
+   async function submitForm(event) {
       event.preventDefault();
 
       const email = document.getElementById('email').value;
@@ -115,7 +115,7 @@
             TransactionID: response.reference,
             PaymentStatus: 'success'
           };
-          
+
           sendToGoogleForms(donationData);
           alert("Thank you for your donation! 🎉");
         },
@@ -140,6 +140,12 @@
       formData.append('entry.299858209', data.Email); // Replace with real entry IDs
       formData.append('entry.1350516490', data.Amount);
       //formData.append('entry.', data.TransactionID);
+
+      await fetch(formURL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: formData
+      });
     }
   </script>
   <script>
