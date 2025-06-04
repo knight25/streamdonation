@@ -96,8 +96,8 @@
   </div>
 
   <!-- JS Section -->
-  <script>
- const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGO0K0RXNJpqKt7m58eh-fBt6LsUMnKh23QKILAeU7o7ichzF0TZ5XqbtnXet3Ry3hmh3BTGDGB9ya/pub?output=csv";
+ <script>
+  const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTGO0K0RXNJpqKt7m58eh-fBt6LsUMnKh23QKILAeU7o7ichzF0TZ5XqbtnXet3Ry3hmh3BTGDGB9ya/pub?output=csv";
   const goalAmount = 700000;
   const donationText = document.getElementById("donationCenterText");
   const historyList = document.getElementById("donationHistory");
@@ -163,12 +163,13 @@
       console.error("Failed to fetch donation data:", error);
     }
   }
-    
-   // NO automatic updates:
+
+  // NO automatic updates:
   // setInterval(fetchDonations, 10000);
 
   // Just fetch once immediately:
   fetchDonations();
-  </script>
+</script>
+
 </body>
 </html>
