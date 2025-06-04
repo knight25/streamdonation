@@ -220,6 +220,19 @@
 
   // Just fetch once immediately:
   fetchDonations();
+
+     function updateDonationHistory(rows) {
+    const list = document.getElementById("donationHistory");
+    list.innerHTML = '';
+    rows.slice(-5).reverse().forEach(row => {
+      const cols = row.split(",");
+      const amount = parseFloat(cols[1]);
+      const email = cols[0];
+      const li = document.createElement('li');
+      li.textContent = `${email} donated ₦${amount.toLocaleString()}`;
+      list.appendChild(li);
+    });
+  }
   </script>
 </body>
 </html>
