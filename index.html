@@ -177,7 +177,6 @@ async function fetchDonations() {
 
     const emailIndex = headers.findIndex(h => h.toLowerCase().includes('email'));
     const amountIndex = headers.findIndex(h => h.toLowerCase().includes('amount'));
-    const refIndex = headers.findIndex(h => h.toLowerCase().includes('ref') || h.toLowerCase().includes('transaction'));
 
     if (emailIndex === -1 || amountIndex === -1) {
       console.error('Email or Amount column not found.');
