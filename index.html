@@ -216,9 +216,11 @@
       }
     }
 
-    // Initial fetch and periodic update every 30 seconds
-    fetchDonations();
-    setInterval(fetchDonations, 30000);
+    // NO automatic updates:
+  // setInterval(fetchDonations, 10000);
+
+  // Just fetch once immediately:
+  fetchDonations();
   </script>
 </body>
 </html>
