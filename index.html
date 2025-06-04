@@ -115,9 +115,7 @@
             TransactionID: response.reference,
             PaymentStatus: 'success'
           };
-
-          addToDonationHistory(donationData);
-          updateChart(amount);
+          
           sendToGoogleForms(donationData);
           alert("Thank you for your donation! 🎉");
         },
